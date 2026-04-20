@@ -1,0 +1,200 @@
+{
+  "id": "chrome_147",
+  "browser": "chrome",
+  "version": "147.0.7727.101/102",
+  "platform": "linux",
+  "headers": [
+    [
+      "sec-ch-ua",
+      "\"Chromium\";v=\"147\", \"Not.A/Brand\";v=\"24\", \"Google Chrome\";v=\"147\""
+    ],
+    [
+      "sec-ch-ua-mobile",
+      "?0"
+    ],
+    [
+      "sec-ch-ua-platform",
+      "\"Linux\""
+    ],
+    [
+      "upgrade-insecure-requests",
+      "1"
+    ],
+    [
+      "user-agent",
+      "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36"
+    ],
+    [
+      "accept-language",
+      "en-US,en;q=0.9"
+    ],
+    [
+      "accept",
+      "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7"
+    ],
+    [
+      "sec-fetch-site",
+      "none"
+    ],
+    [
+      "sec-fetch-mode",
+      "navigate"
+    ],
+    [
+      "sec-fetch-user",
+      "?1"
+    ],
+    [
+      "sec-fetch-dest",
+      "document"
+    ],
+    [
+      "accept-encoding",
+      "gzip, deflate, br, zstd"
+    ],
+    [
+      "priority",
+      "u=0, i"
+    ]
+  ],
+  "transport": {
+    "tls": {
+      "alpn": [
+        "h2",
+        "http/1.1"
+      ],
+      "alps": [],
+      "alps_use_new_codepoint": false,
+      "certificate_compression": [
+        "brotli"
+      ],
+      "curves": [
+        "X25519MLKEM768",
+        "X25519",
+        "P-256",
+        "P-384",
+        "P-521",
+        "ffdhe2048",
+        "ffdhe3072"
+      ],
+      "cipher_suites": [
+        "TLS_AES_128_GCM_SHA256",
+        "TLS_CHACHA20_POLY1305_SHA256",
+        "TLS_AES_256_GCM_SHA384",
+        "TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256",
+        "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256",
+        "TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305_SHA256",
+        "TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305_SHA256",
+        "TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384",
+        "TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384",
+        "TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA",
+        "TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA",
+        "TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA",
+        "TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA",
+        "TLS_RSA_WITH_AES_128_GCM_SHA256",
+        "TLS_RSA_WITH_AES_256_GCM_SHA384",
+        "TLS_RSA_WITH_AES_128_CBC_SHA",
+        "TLS_RSA_WITH_AES_256_CBC_SHA"
+      ],
+      "delegated_credentials": [
+        "ecdsa_secp256r1_sha256",
+        "ecdsa_secp384r1_sha384",
+        "ecdsa_secp521r1_sha512",
+        "ecdsa_sha1"
+      ],
+      "signature_algorithms": [
+        "ecdsa_secp256r1_sha256",
+        "ecdsa_secp384r1_sha384",
+        "ecdsa_secp521r1_sha512",
+        "rsa_pss_rsae_sha256",
+        "rsa_pss_rsae_sha384",
+        "rsa_pss_rsae_sha512",
+        "rsa_pkcs1_sha256",
+        "rsa_pkcs1_sha384",
+        "rsa_pkcs1_sha512",
+        "ecdsa_sha1",
+        "rsa_pkcs1_sha1"
+      ],
+      "key_share_groups": [
+        "X25519MLKEM768",
+        "X25519",
+        "P-256"
+      ],
+      "extension_order": [
+        "server_name",
+        "extended_master_secret",
+        "renegotiate",
+        "supported_groups",
+        "ec_point_formats",
+        "session_ticket",
+        "application_layer_protocol_negotiation",
+        "status_request",
+        "delegated_credential",
+        "certificate_timestamp",
+        "key_share",
+        "supported_versions",
+        "signature_algorithms",
+        "psk_key_exchange_modes",
+        "record_size_limit",
+        "cert_compression",
+        "encrypted_client_hello",
+        "padding"
+      ],
+      "min_version": "tls1.2",
+      "max_version": "tls1.3",
+      "record_size_limit": 16385,
+      "ech_grease": true,
+      "extension_permutation": true,
+      "grease_enabled": null,
+      "pre_shared_key": true,
+      "preserve_tls13_cipher_list": true,
+      "ocsp_stapling": true,
+      "signed_cert_timestamps": true,
+      "notes": "Chrome 147 template backed by BoringSSL-style TLS options. Replace values from fresh capture when Chrome 148 ships."
+    },
+    "http2": {
+      "pseudo_header_order": [
+        ":method",
+        ":path",
+        ":authority",
+        ":scheme"
+      ],
+      "settings_order": [
+        "header_table_size",
+        "enable_push",
+        "max_concurrent_streams",
+        "initial_window_size",
+        "max_frame_size",
+        "max_header_list_size",
+        "enable_connect_protocol",
+        "no_rfc7540_priorities"
+      ],
+      "settings": [
+        [
+          "header_table_size",
+          65536
+        ],
+        [
+          "enable_push",
+          0
+        ],
+        [
+          "initial_window_size",
+          131072
+        ],
+        [
+          "max_frame_size",
+          16384
+        ]
+      ],
+      "initial_stream_id": 3,
+      "initial_connection_window_size": 12582912,
+      "stream_dependency": {
+        "stream_id": 0,
+        "weight": 41,
+        "exclusive": false
+      },
+      "priority_header": "u=0, i"
+    }
+  }
+}

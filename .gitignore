@@ -1,0 +1,13 @@
+/_build/
+/cover/
+/deps/
+/native/ex_fingerprint_nif/target/
+/.devenv/
+/.claude/
+/.codex/
+/.nono/
+.DS_Store
+erl_crash.dump
+*.ez
+priv/native/*.so
+priv/certs/custom_roots.pem
