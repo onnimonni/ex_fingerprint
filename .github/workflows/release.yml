@@ -89,7 +89,12 @@ jobs:
           # Determine NIF version from OTP (25 → 2.15, 26 → 2.16, 27 → 2.17)
           NIF_VERSION=$(erl -noshell -eval 'io:format("~s~n", [erlang:system_info(nif_version)]), halt()' 2>/dev/null || echo "2.16")
           BASENAME="libex_fingerprint_nif-v${VERSION}-nif-${NIF_VERSION}-${TARGET}.so"
-          cp target/${TARGET}/release/libex_fingerprint_nif.so ${BASENAME}
+          # macOS produces .dylib; rustler_precompiled convention is .so for all platforms
+          if [ "$(uname)" = "Darwin" ]; then
+            cp target/${TARGET}/release/libex_fingerprint_nif.dylib ${BASENAME}
+          else
+            cp target/${TARGET}/release/libex_fingerprint_nif.so ${BASENAME}
+          fi
           tar czf "${BASENAME}.tar.gz" "${BASENAME}"
           echo "ARTIFACT=${BASENAME}.tar.gz" >> $GITHUB_ENV
           # Compute SHA256
