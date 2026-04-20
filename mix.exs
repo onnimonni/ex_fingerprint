@@ -56,7 +56,8 @@ defmodule ExFingerprint.MixProject do
     [
       {:credo, "~> 1.7", only: [:dev, :test], runtime: false},
       {:jason, "~> 1.4"},
-      {:rustler, "~> 0.36"},
+      {:rustler, "~> 0.36", optional: true},
+      {:rustler_precompiled, "~> 0.7"},
       {:websockex, "~> 0.4"},
       {:wireguardex, "~> 0.4"}
     ]

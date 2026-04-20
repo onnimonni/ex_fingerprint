@@ -1,0 +1,159 @@
+name: Release precompiled NIFs
+
+on:
+  push:
+    tags:
+      - "v*"
+
+# Build one NIF per platform, then collect into a single release.
+jobs:
+  build_release:
+    name: NIF ${{ matrix.target }}
+    runs-on: ${{ matrix.os }}
+    permissions:
+      contents: write
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          # ── Linux x86_64 ───────────────────────────────────────────────
+          - os: ubuntu-22.04
+            target: x86_64-unknown-linux-gnu
+            use_cross: false
+
+          # ── Linux ARM64 (cross-compile from x86_64 runner) ─────────────
+          - os: ubuntu-22.04
+            target: aarch64-unknown-linux-gnu
+            use_cross: true
+
+          # ── macOS ARM64 (Apple Silicon) ────────────────────────────────
+          - os: macos-14
+            target: aarch64-apple-darwin
+            use_cross: false
+
+          # ── macOS x86_64 (Intel) ───────────────────────────────────────
+          - os: macos-13
+            target: x86_64-apple-darwin
+            use_cross: false
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.target }}
+
+      # BoringSSL (via btls-sys) requires cmake, Go, perl, and clang.
+      - name: Install Linux build deps (cmake, go, perl, clang)
+        if: runner.os == 'Linux' && !matrix.use_cross
+        run: |
+          sudo apt-get update -q
+          sudo apt-get install -y cmake golang perl clang libclang-dev pkg-config
+
+      - name: Install macOS build deps (cmake, go)
+        if: runner.os == 'macOS'
+        run: |
+          brew install cmake go
+
+      # cross handles cross-compilation including BoringSSL deps in Docker.
+      - name: Install cross
+        if: matrix.use_cross
+        run: cargo install cross --git https://github.com/cross-rs/cross
+
+      - name: Extract version from tag
+        id: version
+        run: echo "version=${GITHUB_REF_NAME#v}" >> $GITHUB_OUTPUT
+
+      - name: Build NIF (native)
+        if: "!matrix.use_cross"
+        working-directory: native/ex_fingerprint_nif
+        env:
+          CC: clang
+          CXX: clang++
+        run: |
+          cargo build --release --target ${{ matrix.target }}
+
+      - name: Build NIF (cross)
+        if: matrix.use_cross
+        working-directory: native/ex_fingerprint_nif
+        run: |
+          cross build --release --target ${{ matrix.target }}
+
+      - name: Package NIF as .so.tar.gz
+        working-directory: native/ex_fingerprint_nif
+        run: |
+          VERSION=${{ steps.version.outputs.version }}
+          TARGET=${{ matrix.target }}
+          # Determine NIF version from OTP (25 → 2.15, 26 → 2.16, 27 → 2.17)
+          NIF_VERSION=$(erl -noshell -eval 'io:format("~s~n", [erlang:system_info(nif_version)]), halt()' 2>/dev/null || echo "2.16")
+          BASENAME="libex_fingerprint_nif-v${VERSION}-nif-${NIF_VERSION}-${TARGET}.so"
+          cp target/${TARGET}/release/libex_fingerprint_nif.so ${BASENAME}
+          tar czf "${BASENAME}.tar.gz" "${BASENAME}"
+          echo "ARTIFACT=${BASENAME}.tar.gz" >> $GITHUB_ENV
+          # Compute SHA256
+          if [ "$(uname)" = "Darwin" ]; then
+            sha256sum() { shasum -a 256 "$@"; }
+          fi
+          sha256sum "${BASENAME}.tar.gz" | awk '{print $1}' > "${BASENAME}.tar.gz.sha256"
+
+      - name: Upload NIF artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: nif-${{ matrix.target }}
+          path: |
+            native/ex_fingerprint_nif/*.tar.gz
+            native/ex_fingerprint_nif/*.sha256
+          if-no-files-found: error
+
+  create_release:
+    name: Create GitHub Release
+    needs: build_release
+    runs-on: ubuntu-22.04
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts/
+          merge-multiple: true
+
+      - name: List artifacts
+        run: ls -R artifacts/
+
+      - name: Create release and upload NIFs
+        uses: softprops/action-gh-release@v2
+        with:
+          files: artifacts/**
+          generate_release_notes: true
+          fail_on_unmatched_files: false
+
+  # After release is published, generate the checksum file that
+  # rustler_precompiled needs so clients can verify downloads.
+  generate_checksums:
+    name: Generate checksum file
+    needs: create_release
+    runs-on: ubuntu-22.04
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Elixir
+        uses: erlef/setup-beam@v1
+        with:
+          elixir-version: "1.17"
+          otp-version: "27"
+
+      - name: Generate checksum file
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          mix deps.get
+          EX_FINGERPRINT_BUILD=false mix rustler_precompiled.download ExFingerprint.Nif --all --print
