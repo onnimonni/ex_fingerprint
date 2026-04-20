@@ -188,9 +188,8 @@ fn tls_options(profile: &TlsProfile) -> Result<TlsOptions, RequestError> {
         builder = builder.extension_permutation(extension_order(&profile.extension_order)?);
     }
     if !profile.certificate_compression.is_empty() {
-        builder = builder.certificate_compressors(certificate_compressors(
-            &profile.certificate_compression,
-        )?);
+        builder = builder
+            .certificate_compressors(certificate_compressors(&profile.certificate_compression)?);
     }
 
     Ok(builder.build())
@@ -290,7 +289,10 @@ fn extension(value: &str) -> Result<ExtensionType, RequestError> {
 fn certificate_compressors(
     items: &[String],
 ) -> Result<Vec<&'static dyn CertificateCompressor>, RequestError> {
-    items.iter().map(|item| certificate_compressor(item)).collect()
+    items
+        .iter()
+        .map(|item| certificate_compressor(item))
+        .collect()
 }
 
 fn certificate_compressor(value: &str) -> Result<&'static dyn CertificateCompressor, RequestError> {
@@ -348,5 +350,125 @@ fn setting_id(value: &str) -> Result<SettingId, RequestError> {
         other => Err(RequestError::Protocol(format!(
             "unsupported HTTP/2 setting id: {other}"
         ))),
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::profile::chrome_147;
+    use crate::transport::plan::RequestPlan;
+
+    fn request_plan() -> RequestPlan {
+        let profile = chrome_147();
+
+        RequestPlan {
+            method: "GET".to_string(),
+            url: "https://example.test/".to_string(),
+            profile_id: profile.id.clone(),
+            headers: profile.headers.clone(),
+            alpn: profile.tls.alpn.clone(),
+            pseudo_header_order: profile.http2.pseudo_header_order.clone(),
+            http2_settings: profile.http2.settings.clone(),
+            proxy_tunnel: None,
+        }
+    }
+
+    #[test]
+    fn builds_emulation_from_chrome_profile() {
+        let profile = chrome_147();
+        let plan = request_plan();
+
+        assert!(build(&plan, &profile).is_ok());
+    }
+
+    #[test]
+    fn identifies_managed_headers() {
+        assert!(managed_header("host"));
+        assert!(managed_header("connection"));
+        assert!(!managed_header("user-agent"));
+    }
+
+    #[test]
+    fn names_http_versions() {
+        assert_eq!(protocol_name(http::Version::HTTP_2), "h2");
+        assert_eq!(protocol_name(http::Version::HTTP_11), "http/1.1");
+        assert_eq!(version_name(http::Version::HTTP_10), "http/1.0");
+        assert_eq!(version_name(http::Version::HTTP_3), "h3");
+    }
+
+    #[test]
+    fn compresses_and_decompresses_brotli_certificate_payloads() {
+        let input = b"certificate-payload";
+        let mut compressed = Vec::new();
+
+        BROTLI_CERT_COMPRESSOR
+            .compress(input, &mut compressed)
+            .expect("compression should succeed");
+
+        let mut decompressed = Vec::new();
+        BROTLI_CERT_COMPRESSOR
+            .decompress(&compressed, &mut decompressed)
+            .expect("decompression should succeed");
+
+        assert_eq!(decompressed, input);
+        assert_eq!(
+            BROTLI_CERT_COMPRESSOR.algorithm(),
+            CertificateCompressionAlgorithm::BROTLI
+        );
+    }
+
+    #[test]
+    fn rejects_invalid_tls_and_http2_identifiers() {
+        assert!(matches!(
+            alpn_protocol("smtp"),
+            Err(RequestError::Protocol(_))
+        ));
+        assert!(matches!(
+            alps_protocol("smtp"),
+            Err(RequestError::Protocol(_))
+        ));
+        assert!(matches!(
+            tls_version("ssl3"),
+            Err(RequestError::Protocol(_))
+        ));
+        assert!(matches!(
+            key_share("bad-share"),
+            Err(RequestError::Protocol(_))
+        ));
+        assert!(matches!(
+            extension("bad-extension"),
+            Err(RequestError::Protocol(_))
+        ));
+        assert!(matches!(
+            certificate_compressor("gzip"),
+            Err(RequestError::Protocol(_))
+        ));
+        assert!(matches!(
+            pseudo_id(":status"),
+            Err(RequestError::Protocol(_))
+        ));
+        assert!(matches!(
+            setting_id("not_a_real_setting"),
+            Err(RequestError::Protocol(_))
+        ));
+    }
+
+    #[test]
+    fn builds_header_maps_without_managed_headers() {
+        let plan = RequestPlan {
+            headers: vec![
+                ("host".to_string(), "example.test".to_string()),
+                ("user-agent".to_string(), "agent".to_string()),
+                ("x-extra".to_string(), "1".to_string()),
+            ],
+            ..request_plan()
+        };
+
+        let (headers, _orig_headers) = header_maps(&plan).expect("header maps should build");
+
+        assert!(!headers.contains_key("host"));
+        assert!(headers.contains_key("user-agent"));
+        assert!(headers.contains_key("x-extra"));
     }
 }

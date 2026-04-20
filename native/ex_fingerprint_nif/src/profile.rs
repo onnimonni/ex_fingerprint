@@ -89,3 +89,30 @@ pub fn profile_metadata() -> ProfileMetadata {
         profiles: vec![chrome_147()],
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn resolves_known_profile_ids() {
+        assert!(resolve("chrome_147").is_some());
+        assert!(resolve("chrome_unknown").is_none());
+    }
+
+    #[test]
+    fn exposes_http2_setting_lookup() {
+        let profile = chrome_147();
+
+        assert_eq!(profile.http2.setting("header_table_size"), Some(65_536));
+        assert_eq!(profile.http2.setting("missing"), None);
+    }
+
+    #[test]
+    fn serializes_profile_metadata() {
+        let value = serde_json::to_value(profile_metadata()).expect("metadata should serialize");
+
+        assert_eq!(value["latest_aliases"]["chrome_latest"], "chrome_147");
+        assert_eq!(value["profiles"][0]["id"], "chrome_147");
+    }
+}

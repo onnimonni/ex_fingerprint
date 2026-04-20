@@ -53,3 +53,16 @@ impl From<serde_json::Error> for RequestError {
         RequestError::Serde(error.to_string())
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn converts_serde_errors_into_request_errors() {
+        let error = serde_json::from_str::<serde_json::Value>("{").unwrap_err();
+        let request_error: RequestError = error.into();
+
+        assert!(matches!(request_error, RequestError::Serde(_)));
+    }
+}
