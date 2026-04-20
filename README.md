@@ -40,15 +40,15 @@ The Rust NIF should:
 
 ## Project layout
 
-- [lib/ex_fingerprint.ex](/Users/onnimonni/Projects/ex_fingerprint/lib/ex_fingerprint.ex:1): public API
-- [lib/ex_fingerprint/client.ex](/Users/onnimonni/Projects/ex_fingerprint/lib/ex_fingerprint/client.ex:1): Elixir-side request path
-- [lib/ex_fingerprint/profile](/Users/onnimonni/Projects/ex_fingerprint/lib/ex_fingerprint/profile/chrome_147.ex:1): browser profile registry
-- [lib/ex_fingerprint/profile/store.ex](/Users/onnimonni/Projects/ex_fingerprint/lib/ex_fingerprint/profile/store.ex:1): JSON-backed profile store
-- [lib/ex_fingerprint/wire_guard/manager.ex](/Users/onnimonni/Projects/ex_fingerprint/lib/ex_fingerprint/wire_guard/manager.ex:1): kernel WireGuard lifecycle
-- [lib/ex_fingerprint/solver](/Users/onnimonni/Projects/ex_fingerprint/lib/ex_fingerprint/solver/chrome.ex:1): escalation boundary for real browser solving
-- [lib/ex_fingerprint/nif.ex](/Users/onnimonni/Projects/ex_fingerprint/lib/ex_fingerprint/nif.ex:1): Rustler boundary
-- [native/ex_fingerprint_nif](/Users/onnimonni/Projects/ex_fingerprint/native/ex_fingerprint_nif/src/lib.rs:1): native transport crate
-- [docs/ARCHITECTURE.md](/Users/onnimonni/Projects/ex_fingerprint/docs/ARCHITECTURE.md:1): migration map from `fauxbrowser`
+- [lib/ex_fingerprint.ex](./lib/ex_fingerprint.ex): public API
+- [lib/ex_fingerprint/client.ex](./lib/ex_fingerprint/client.ex): Elixir-side request path
+- [lib/ex_fingerprint/profile/chrome_147.ex](./lib/ex_fingerprint/profile/chrome_147.ex): browser profile registry
+- [lib/ex_fingerprint/profile/store.ex](./lib/ex_fingerprint/profile/store.ex): JSON-backed profile store
+- [lib/ex_fingerprint/wire_guard/manager.ex](./lib/ex_fingerprint/wire_guard/manager.ex): kernel WireGuard lifecycle
+- [lib/ex_fingerprint/solver/chrome.ex](./lib/ex_fingerprint/solver/chrome.ex): escalation boundary for real browser solving
+- [lib/ex_fingerprint/nif.ex](./lib/ex_fingerprint/nif.ex): Rustler boundary
+- [native/ex_fingerprint_nif/src/lib.rs](./native/ex_fingerprint_nif/src/lib.rs): native transport crate
+- [docs/ARCHITECTURE.md](./docs/ARCHITECTURE.md): migration map from `fauxbrowser`
 
 ## Current target profile
 
@@ -121,3 +121,7 @@ Current intended bump flow:
 6. rerun:
    `mix ex_fingerprint.verify_peet`
    `mix ex_fingerprint.verify_solver_alignment`
+
+## License
+
+This repository is private and not licensed for public use, redistribution, or modification without explicit permission from the repository owner.
