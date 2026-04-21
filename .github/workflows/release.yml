@@ -129,8 +129,11 @@ jobs:
           generate_release_notes: true
           fail_on_unmatched_files: false
 
-  # After release is published, generate the checksum file that
-  # rustler_precompiled needs so clients can verify downloads.
+  # After release is published, compute sha256 checksums directly from the
+  # uploaded tarballs and commit the checksum file.
+  # We bypass `mix rustler_precompiled.download` entirely — it has a catch-22:
+  # compilation requires the checksum file to exist, but generating checksums
+  # requires compilation. curl + sha256sum sidesteps the whole issue.
   generate_checksums:
     name: Generate checksum file
     needs: create_release
@@ -141,21 +144,27 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Set up Elixir
-        uses: erlef/setup-beam@v1
-        with:
-          elixir-version: "1.18"
-          otp-version: "28"
-
-      - name: Generate and commit checksum file
+      - name: Compute checksums and commit
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          mix deps.get
-          # Remove placeholder checksums — rustler_precompiled fails if the file
-          # exists with non-matching hashes. Deleting lets it create a fresh file.
-          rm -f checksum-Elixir.ExUndercover.Nif.exs
-          EX_UNDERCOVER_BUILD=false mix rustler_precompiled.download ExUndercover.Nif --all --print
+          VERSION="${GITHUB_REF_NAME#v}"
+          NIF_VERSION="2.17"
+          BASE_URL="https://github.com/onnimonni/undercover/releases/download/v${VERSION}"
+
+          # Download each NIF tarball and compute its sha256
+          ENTRIES=""
+          for target in x86_64-unknown-linux-gnu aarch64-unknown-linux-gnu; do
+            filename="libex_undercover_nif-v${VERSION}-nif-${NIF_VERSION}-${target}.so.tar.gz"
+            curl -fsSL -o "/tmp/${filename}" "${BASE_URL}/${filename}"
+            sha=$(sha256sum "/tmp/${filename}" | cut -d' ' -f1)
+            ENTRIES="${ENTRIES}  \"${filename}\" =>\n    \"sha256:${sha}\",\n"
+          done
+
+          # Write Elixir-syntax checksum file
+          printf "%%{\n${ENTRIES}}\n" > checksum-Elixir.ExUndercover.Nif.exs
+          cat checksum-Elixir.ExUndercover.Nif.exs
+
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add checksum-Elixir.ExUndercover.Nif.exs
