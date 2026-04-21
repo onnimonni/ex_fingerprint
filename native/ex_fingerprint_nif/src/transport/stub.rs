@@ -93,6 +93,11 @@ fn client_from_payload(payload: &RequestPayload) -> Result<Client, RequestError>
         .connect_timeout(Duration::from_secs(15))
         .no_proxy();
 
+    // Bind to WireGuard interface if specified (SO_BINDTODEVICE on Linux).
+    if let Some(iface) = &payload.proxy_tunnel {
+        builder = builder.interface(iface.clone());
+    }
+
     if let Some(path) = metadata_string(&payload.metadata, "ca_cert_file") {
         let pem = fs::read(path).map_err(|err| RequestError::Io(err.to_string()))?;
         let store = CertStore::from_pem_stack(&pem)

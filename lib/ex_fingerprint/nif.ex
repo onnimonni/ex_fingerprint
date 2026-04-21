@@ -15,6 +15,7 @@ defmodule ExFingerprint.Nif do
     crate: "ex_fingerprint_nif",
     base_url: @base_url,
     # Set EX_FINGERPRINT_BUILD=1 to compile from source (requires Rust + cmake + go + clang).
+    # Default: download precompiled NIF from GitHub releases.
     force_build: System.get_env("EX_FINGERPRINT_BUILD") in ["1", "true"],
     version: @version,
     targets: [

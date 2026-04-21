@@ -89,11 +89,11 @@ defmodule ExFingerprint.Capture.ClientHello do
       binary_part(hello, 0, hello_len)
 
     <<session_len, after_session::binary>> = rest
-    <<_session::binary-size(session_len), after_cipher_len::binary>> = after_session
+    <<_session::binary-size(^session_len), after_cipher_len::binary>> = after_session
     <<cipher_len::16, after_ciphers::binary>> = after_cipher_len
-    <<cipher_bytes::binary-size(cipher_len), after_comp_len::binary>> = after_ciphers
+    <<cipher_bytes::binary-size(^cipher_len), after_comp_len::binary>> = after_ciphers
     <<comp_len, after_comp::binary>> = after_comp_len
-    <<_compression::binary-size(comp_len), ext_block::binary>> = after_comp
+    <<_compression::binary-size(^comp_len), ext_block::binary>> = after_comp
     <<ext_len::16, ext_bytes::binary-size(ext_len), _rest::binary>> = ext_block
 
     extensions = parse_extensions(ext_bytes, [])

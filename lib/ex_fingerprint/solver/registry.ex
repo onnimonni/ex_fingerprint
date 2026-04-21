@@ -159,7 +159,7 @@ defmodule ExFingerprint.Solver.Registry do
     Process.demonitor(ref, [:flush])
 
     case pop_running_job(state, ref) do
-      {:ok, job, state} ->
+      {:ok, job, %__MODULE__{} = state} ->
         Enum.each(job.waiters, &GenServer.reply(&1, result))
 
         completed =

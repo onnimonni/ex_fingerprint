@@ -86,8 +86,8 @@ jobs:
         run: |
           VERSION=${{ steps.version.outputs.version }}
           TARGET=${{ matrix.target }}
-          # Determine NIF version from OTP (25 → 2.15, 26 → 2.16, 27 → 2.17)
-          NIF_VERSION=$(erl -noshell -eval 'io:format("~s~n", [erlang:system_info(nif_version)]), halt()' 2>/dev/null || echo "2.16")
+          # NIF 2.17 = OTP 27/28. Production uses OTP 28 (nif-2.17).
+          NIF_VERSION="2.17"
           BASENAME="libex_fingerprint_nif-v${VERSION}-nif-${NIF_VERSION}-${TARGET}.so"
           # macOS produces .dylib; rustler_precompiled convention is .so for all platforms
           if [ "$(uname)" = "Darwin" ]; then
@@ -153,8 +153,8 @@ jobs:
       - name: Set up Elixir
         uses: erlef/setup-beam@v1
         with:
-          elixir-version: "1.17"
-          otp-version: "27"
+          elixir-version: "1.18"
+          otp-version: "28"
 
       - name: Generate checksum file
         env:

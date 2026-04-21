@@ -4,7 +4,7 @@ defmodule ExFingerprint.MixProject do
   def project do
     [
       app: :ex_fingerprint,
-      version: "0.1.0",
+      version: "0.1.1",
       elixir: "~> 1.16",
       elixirc_paths: elixirc_paths(Mix.env()),
       test_coverage: test_coverage(),
@@ -57,7 +57,7 @@ defmodule ExFingerprint.MixProject do
       {:credo, "~> 1.7", only: [:dev, :test], runtime: false},
       {:jason, "~> 1.4"},
       {:rustler, "~> 0.36", optional: true},
-      {:rustler_precompiled, "~> 0.7"},
+      {:rustler_precompiled, "~> 0.7.0"},
       {:websockex, "~> 0.4"},
       {:wireguardex, "~> 0.4"}
     ]
