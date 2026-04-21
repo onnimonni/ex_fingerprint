@@ -5,14 +5,14 @@ defmodule ExUndercover.Nif do
   @version Mix.Project.config()[:version]
 
   # GitHub repository hosting the precompiled NIF releases.
-  # Binaries are published at:
-  #   https://github.com/onnimonni/undercover/releases/download/v{version}/
-  #     libex_undercover_nif-v{version}-nif-{nif_version}-{target}.so.tar.gz
+  # v0.1.1 binaries were built under the old crate name ex_fingerprint_nif.
+  # After v0.2.0 is released from onnimonni/undercover, update crate to
+  # "ex_undercover_nif" and bump version in mix.exs.
   @base_url "https://github.com/onnimonni/undercover/releases/download/v#{@version}"
 
   use RustlerPrecompiled,
     otp_app: :ex_undercover,
-    crate: "ex_undercover_nif",
+    crate: "ex_fingerprint_nif",
     base_url: @base_url,
     # Set EX_UNDERCOVER_BUILD=1 to compile from source (requires Rust + cmake + go + clang).
     # Default: download precompiled NIF from GitHub releases.
