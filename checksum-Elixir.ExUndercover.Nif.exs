@@ -1,6 +1,6 @@
 %{
-  "libex_undercover_nif-v0.3.0-nif-2.17-x86_64-unknown-linux-gnu.so.tar.gz" =>
-    "sha256:a5482c0ccedcddb6df8025fc0062a4f36c07e1bbb2e11d6cdf8c505c4a6e79ce",
-  "libex_undercover_nif-v0.3.0-nif-2.17-aarch64-unknown-linux-gnu.so.tar.gz" =>
-    "sha256:0f82327bf8b669570f659a4086e0b8ad5e319b5957a514517ad23064184ec8e9",
+  "libex_undercover_nif-v0.4.0-nif-2.17-x86_64-unknown-linux-gnu.so.tar.gz" =>
+    "sha256:3b09fe0627ac6f571a47d0757286e141429a52783e898f876b7999248768c12e",
+  "libex_undercover_nif-v0.4.0-nif-2.17-aarch64-unknown-linux-gnu.so.tar.gz" =>
+    "sha256:b718dfd6b243d05894652dc758bba16fb4ce18a49a6deaf43740008226c9b5e3",
 }
