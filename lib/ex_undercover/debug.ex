@@ -7,6 +7,7 @@ defmodule ExUndercover.Debug do
   alias ExUndercover.Profile
   alias ExUndercover.Request
 
+  @doc false
   def build_request_plan(request_or_url, opts \\ [])
 
   def build_request_plan(%Request{} = request, opts) do

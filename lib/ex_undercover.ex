@@ -18,6 +18,7 @@ defmodule ExUndercover do
   alias ExUndercover.Transport
   alias ExUndercover.WireGuard
 
+  @doc false
   @spec request(Request.t() | String.t(), keyword()) :: {:ok, Response.t()} | {:error, term()}
   def request(request_or_url, opts \\ [])
   def request(%Request{} = request, opts), do: Transport.request(request, opts)
@@ -25,11 +26,13 @@ defmodule ExUndercover do
   def request(url, opts) when is_binary(url),
     do: url |> Request.new(opts) |> Transport.request(opts)
 
+  @doc false
   @spec latest_profile() :: BrowserProfile.t()
   def latest_profile do
     ExUndercover.Profile.chrome_latest()
   end
 
+  @doc false
   @spec clear_cookies(Request.t() | keyword()) :: :ok
   def clear_cookies(opts \\ [])
 
@@ -45,6 +48,7 @@ defmodule ExUndercover do
     Solver.Registry.reset(solver_registry, opts)
   end
 
+  @doc false
   @spec open_tunnel(WireGuard.Config.t() | keyword()) :: :ok | {:error, term()}
   def open_tunnel(%WireGuard.Config{} = config) do
     WireGuard.Manager.ensure_started(config)
@@ -56,11 +60,13 @@ defmodule ExUndercover do
     |> WireGuard.Manager.ensure_started()
   end
 
+  @doc false
   @spec proton_config(binary(), keyword()) :: {:ok, WireGuard.Config.t()} | {:error, term()}
   def proton_config(conf_path, opts \\ []) do
     Proton.build_wireguard_config(conf_path, opts)
   end
 
+  @doc false
   @spec open_proton_tunnel(binary(), keyword()) :: :ok | {:error, term()}
   def open_proton_tunnel(conf_path, opts \\ []) do
     with {:ok, config} <- proton_config(conf_path, opts) do

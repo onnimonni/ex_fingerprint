@@ -10,6 +10,7 @@ defmodule ExUndercover.Profile do
   alias ExUndercover.Profile.Chrome147
   alias ExUndercover.Profile.Store
 
+  @doc false
   @spec chrome_latest() :: BrowserProfile.t()
   def chrome_latest do
     case Store.resolve_alias(:chrome_latest) do
@@ -18,6 +19,7 @@ defmodule ExUndercover.Profile do
     end
   end
 
+  @doc false
   @spec resolve(atom() | BrowserProfile.t()) :: BrowserProfile.t()
   def resolve(%BrowserProfile{} = profile), do: profile
   def resolve(:chrome_latest), do: chrome_latest()
@@ -32,6 +34,7 @@ defmodule ExUndercover.Profile do
     resolve_binary(profile_id)
   end
 
+  @doc false
   @spec known_profiles() :: [atom()]
   def known_profiles do
     profiles =
@@ -45,6 +48,7 @@ defmodule ExUndercover.Profile do
     end
   end
 
+  @doc false
   @spec to_transport_map(BrowserProfile.t()) :: map()
   def to_transport_map(%BrowserProfile{} = profile) do
     profile_map = BrowserProfile.to_map(profile)

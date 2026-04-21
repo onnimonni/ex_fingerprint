@@ -13,6 +13,7 @@ defmodule ExUndercover.Transport do
   @type outcome :: {:ok, Response.t()} | {:error, term()}
   @default_max_redirects 10
 
+  @doc false
   @spec request(Request.t(), keyword()) :: outcome()
   def request(%Request{} = request, opts \\ []) do
     solver_backend = Keyword.get(opts, :solver_backend, ExUndercover.Solver.Chrome)
@@ -259,7 +260,7 @@ defmodule ExUndercover.Transport do
           cookie_jar,
           true,
           remaining_redirects - 1,
-          redirect_chain ++ [redirect_entry(request.url, response.status, location)]
+          [redirect_entry(request.url, response.status, location) | redirect_chain]
         )
 
       _location ->
@@ -349,6 +350,8 @@ defmodule ExUndercover.Transport do
   end
 
   defp decorate_response(%Response{} = response, %Request{} = request, redirect_chain) do
+    redirect_chain = Enum.reverse(redirect_chain)
+
     merge_diagnostics(response, %{
       redirect_count: length(redirect_chain),
       redirect_chain: redirect_chain,

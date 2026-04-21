@@ -22,7 +22,7 @@ defmodule Mix.Tasks.ExUndercover.ExportProfile do
   defp export(profile_id, nil) do
     profile =
       profile_id
-      |> String.to_atom()
+      |> String.to_existing_atom()
       |> ExUndercover.Profile.resolve()
       |> ExUndercover.Profile.to_transport_map()
 
@@ -32,7 +32,7 @@ defmodule Mix.Tasks.ExUndercover.ExportProfile do
   defp export(profile_id, output_path) do
     profile =
       profile_id
-      |> String.to_atom()
+      |> String.to_existing_atom()
       |> ExUndercover.Profile.resolve()
       |> ExUndercover.Profile.to_transport_map()
 

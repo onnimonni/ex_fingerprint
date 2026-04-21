@@ -58,32 +58,38 @@ defmodule ExUndercover.Solver.Registry do
     GenServer.start_link(__MODULE__, opts, name: Keyword.get(opts, :name, __MODULE__))
   end
 
+  @doc false
   @spec lookup_or_solve(pid() | atom(), Request.t(), keyword()) :: {:ok, map()} | {:error, term()}
   def lookup_or_solve(server \\ __MODULE__, %Request{} = request, opts \\ []) do
     timeout = Keyword.get(opts, :solver_registry_timeout, @default_call_timeout)
     GenServer.call(server, {:lookup_or_solve, request, opts}, timeout)
   end
 
+  @doc false
   @spec circuit_open?(pid() | atom(), Request.t(), keyword()) :: boolean()
   def circuit_open?(server \\ __MODULE__, %Request{} = request, opts \\ []) do
     GenServer.call(server, {:circuit_open?, request_key(request, opts)})
   end
 
+  @doc false
   @spec mark_retry_failed(pid() | atom(), Request.t(), keyword()) :: circuit_status()
   def mark_retry_failed(server \\ __MODULE__, %Request{} = request, opts \\ []) do
     GenServer.call(server, {:mark_retry_failed, request_key(request, opts)})
   end
 
+  @doc false
   @spec mark_retry_succeeded(pid() | atom(), Request.t(), keyword()) :: :ok
   def mark_retry_succeeded(server \\ __MODULE__, %Request{} = request, opts \\ []) do
     GenServer.call(server, {:mark_retry_succeeded, request_key(request, opts)})
   end
 
+  @doc false
   @spec reset(pid() | atom(), keyword()) :: :ok
   def reset(server \\ __MODULE__, opts \\ []) when is_list(opts) do
     GenServer.call(server, {:reset, opts})
   end
 
+  @doc false
   @spec stats(pid() | atom()) :: map()
   def stats(server \\ __MODULE__) do
     GenServer.call(server, :stats)

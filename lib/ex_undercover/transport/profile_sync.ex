@@ -7,11 +7,13 @@ defmodule ExUndercover.Transport.ProfileSync do
   alias ExUndercover.Nif
   alias ExUndercover.Profile.Store
 
+  @doc false
   @spec metadata() :: {:ok, map()} | {:error, term()}
   def metadata do
     Nif.profile_metadata()
   end
 
+  @doc false
   @spec latest_alias_target(atom()) :: {:ok, atom()} | {:error, term()}
   def latest_alias_target(alias_name) when is_atom(alias_name) do
     case Store.resolve_alias(alias_name) do
@@ -26,7 +28,7 @@ defmodule ExUndercover.Transport.ProfileSync do
   defp fallback_latest_alias_target(alias_name) do
     with {:ok, %{"latest_aliases" => aliases}} <- metadata(),
          target when is_binary(target) <- Map.get(aliases, Atom.to_string(alias_name)) do
-      {:ok, String.to_atom(target)}
+      {:ok, String.to_existing_atom(target)}
     else
       nil -> {:error, :unknown_alias}
       {:error, reason} -> {:error, reason}

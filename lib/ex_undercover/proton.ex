@@ -19,6 +19,7 @@ defmodule ExUndercover.Proton do
           pubkey: binary()
         }
 
+  @doc false
   @spec list_endpoints(keyword()) :: {:ok, [endpoint()]} | {:error, term()}
   def list_endpoints(opts \\ []) do
     path = Keyword.get(opts, :snapshot_path, default_snapshot_path())
@@ -34,6 +35,7 @@ defmodule ExUndercover.Proton do
     end
   end
 
+  @doc false
   @spec choose_endpoint(keyword()) :: {:ok, endpoint()} | {:error, term()}
   def choose_endpoint(opts \\ []) do
     with {:ok, endpoints} <- list_endpoints(opts),
@@ -42,6 +44,7 @@ defmodule ExUndercover.Proton do
     end
   end
 
+  @doc false
   @spec build_wireguard_config(binary(), keyword()) :: {:ok, Config.t()} | {:error, term()}
   def build_wireguard_config(conf_path, opts \\ []) do
     with {:ok, config} <- Config.from_file(conf_path, opts),
@@ -62,6 +65,7 @@ defmodule ExUndercover.Proton do
     end
   end
 
+  @doc false
   @spec default_snapshot_path() :: binary()
   def default_snapshot_path, do: @default_snapshot_path
 

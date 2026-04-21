@@ -5,6 +5,7 @@ defmodule ExUndercover.WireGuard.PolicyRouting do
 
   @type runner :: (binary(), [binary()] -> {:ok, binary()} | {:error, term()})
 
+  @doc false
   @spec route_all_traffic_through_table(binary(), non_neg_integer(), keyword()) ::
           :ok | {:error, term()}
   def route_all_traffic_through_table(interface, table, opts \\ []) do
@@ -28,6 +29,7 @@ defmodule ExUndercover.WireGuard.PolicyRouting do
     end
   end
 
+  @doc false
   @spec remove_policy(non_neg_integer(), keyword()) :: :ok | {:error, term()}
   def remove_policy(table, opts \\ []) do
     runner = Keyword.get(opts, :runner, &run_command/2)
@@ -39,6 +41,7 @@ defmodule ExUndercover.WireGuard.PolicyRouting do
     end
   end
 
+  @doc false
   @spec run_command(binary(), [binary()]) :: {:ok, binary()} | {:error, term()}
   def run_command(command, args) do
     case System.cmd(command, args, stderr_to_stdout: true) do

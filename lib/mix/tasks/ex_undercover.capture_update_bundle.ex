@@ -17,7 +17,7 @@ defmodule Mix.Tasks.ExUndercover.CaptureUpdateBundle do
         ]
       )
 
-    profile_id = String.to_atom(opts[:profile] || "chrome_latest")
+    profile_id = String.to_existing_atom(opts[:profile] || "chrome_latest")
 
     with profile <- ExUndercover.Profile.resolve(profile_id),
          {:ok, browser} <-

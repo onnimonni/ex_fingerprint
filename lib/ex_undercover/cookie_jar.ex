@@ -45,6 +45,7 @@ defmodule ExUndercover.CookieJar do
     GenServer.start_link(__MODULE__, %{}, name: Keyword.get(opts, :name, __MODULE__))
   end
 
+  @doc false
   @spec bucket_for(Request.t()) :: bucket()
   def bucket_for(%Request{} = request) do
     metadata = request.metadata
@@ -63,11 +64,13 @@ defmodule ExUndercover.CookieJar do
     ]) || request.proxy_tunnel || "default"
   end
 
+  @doc false
   @spec cookie_header(pid() | atom(), Request.t()) :: binary() | nil
   def cookie_header(server \\ __MODULE__, %Request{} = request) do
     GenServer.call(server, {:cookie_header, request})
   end
 
+  @doc false
   @spec seed_request_cookies(pid() | atom(), Request.t()) :: :ok
   def seed_request_cookies(server \\ __MODULE__, %Request{} = request) do
     case request_cookie_header(request.headers) do
@@ -76,16 +79,19 @@ defmodule ExUndercover.CookieJar do
     end
   end
 
+  @doc false
   @spec store_response(pid() | atom(), Request.t(), [{binary(), binary()}]) :: :ok
   def store_response(server \\ __MODULE__, %Request{} = request, headers) when is_list(headers) do
     GenServer.call(server, {:store_response, request, headers})
   end
 
+  @doc false
   @spec store_cookies(pid() | atom(), Request.t(), list()) :: :ok
   def store_cookies(server \\ __MODULE__, %Request{} = request, cookies) when is_list(cookies) do
     GenServer.call(server, {:store_cookies, request, cookies})
   end
 
+  @doc false
   @spec clear(pid() | atom(), keyword()) :: :ok
   def clear(server \\ __MODULE__, opts \\ []) when is_list(opts) do
     GenServer.call(server, {:clear, opts})

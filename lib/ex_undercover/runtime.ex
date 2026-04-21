@@ -5,6 +5,7 @@ defmodule ExUndercover.Runtime do
 
   alias ExUndercover.WireGuard
 
+  @doc false
   @spec boot(keyword()) :: :ok | {:error, term()}
   def boot(opts) do
     wg_config = WireGuard.Config.new(Keyword.fetch!(opts, :wireguard))

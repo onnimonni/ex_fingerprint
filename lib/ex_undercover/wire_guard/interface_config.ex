@@ -8,6 +8,7 @@ defmodule ExUndercover.WireGuard.InterfaceConfig do
 
   alias ExUndercover.WireGuard.Config
 
+  @doc false
   @spec configure(Config.t(), keyword()) :: :ok | {:error, term()}
   def configure(%Config{} = cfg, opts \\ []) do
     runner = Keyword.get(opts, :runner, &run_command/2)
@@ -22,6 +23,7 @@ defmodule ExUndercover.WireGuard.InterfaceConfig do
     end
   end
 
+  @doc false
   @spec run_command([binary()], keyword()) :: :ok | {:error, term()}
   def run_command(args, opts \\ []) when is_list(args) do
     executable = Keyword.get(opts, :executable, "ip")

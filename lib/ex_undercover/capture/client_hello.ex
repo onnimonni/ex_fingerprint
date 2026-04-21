@@ -174,7 +174,7 @@ defmodule ExUndercover.Capture.ClientHello do
     |> Enum.join(",")
   end
 
-  defp join_dash(list), do: list |> Enum.map(&Integer.to_string/1) |> Enum.join("-")
+  defp join_dash(list), do: Enum.map_join(list, "-", &Integer.to_string/1)
 
   defp parse_u16_list(binary), do: parse_u16_list(binary, [])
   defp parse_u16_list(<<>>, acc), do: Enum.reverse(acc)

@@ -8,21 +8,24 @@ defmodule ExUndercover.Profile.Store do
 
   alias ExUndercover.BrowserProfile
 
+  @doc false
   @spec aliases() :: map()
   def aliases do
     read_json(aliases_path(), %{})
   end
 
+  @doc false
   @spec resolve_alias(atom() | binary()) :: atom() | nil
   def resolve_alias(name) when is_atom(name), do: resolve_alias(Atom.to_string(name))
 
   def resolve_alias(name) when is_binary(name) do
     case Map.get(aliases(), name) do
       nil -> nil
-      target -> String.to_atom(target)
+      target -> String.to_existing_atom(target)
     end
   end
 
+  @doc false
   @spec list() :: [atom()]
   def list do
     profiles_dir()
@@ -30,10 +33,11 @@ defmodule ExUndercover.Profile.Store do
     |> Enum.reject(&(&1 == "aliases.json"))
     |> Enum.filter(&String.ends_with?(&1, ".json"))
     |> Enum.map(&String.replace_suffix(&1, ".json", ""))
-    |> Enum.map(&String.to_atom/1)
+    |> Enum.map(&String.to_existing_atom/1)
     |> Enum.sort()
   end
 
+  @doc false
   @spec load(atom() | binary()) :: {:ok, BrowserProfile.t()} | {:error, term()}
   def load(id) when is_atom(id), do: load(Atom.to_string(id))
 
@@ -50,6 +54,7 @@ defmodule ExUndercover.Profile.Store do
     end
   end
 
+  @doc false
   @spec write_profile!(BrowserProfile.t() | map()) :: :ok
   def write_profile!(%BrowserProfile{} = profile) do
     write_json!(profile_path(profile.id), BrowserProfile.to_map(profile))
@@ -61,6 +66,7 @@ defmodule ExUndercover.Profile.Store do
     |> write_profile!()
   end
 
+  @doc false
   @spec write_aliases!(map()) :: :ok
   def write_aliases!(aliases) when is_map(aliases) do
     normalized =
@@ -71,15 +77,18 @@ defmodule ExUndercover.Profile.Store do
     write_json!(aliases_path(), normalized)
   end
 
+  @doc false
   @spec profile_path(atom() | binary()) :: binary()
   def profile_path(id) when is_atom(id), do: profile_path(Atom.to_string(id))
   def profile_path(id) when is_binary(id), do: Path.join(profiles_dir(), "#{id}.json")
 
+  @doc false
   @spec profiles_dir() :: binary()
   def profiles_dir do
     Application.app_dir(:ex_undercover, "priv/profiles")
   end
 
+  @doc false
   @spec aliases_path() :: binary()
   def aliases_path do
     Path.join(profiles_dir(), "aliases.json")

@@ -41,30 +41,28 @@ defmodule ExUndercover.Solver.Chrome do
   end
 
   defp run_session(session, url, opts) do
-    try do
-      with :ok <- wait_for_devtools(session.port, opts),
-           {:ok, target} <- create_target(session.port, url),
-           {:ok, socket} <- CDPConnection.start_link(target["webSocketDebuggerUrl"], self()),
-           {:ok, _page_enabled} <- cdp_command(socket, "Page.enable"),
-           {:ok, _network_enabled} <- cdp_command(socket, "Network.enable"),
-           :ok <- wait_for_solver_window(opts),
-           {:ok, cookies} <- cdp_command(socket, "Network.getAllCookies"),
-           {:ok, current_url} <- evaluate(socket, "window.location.href"),
-           {:ok, title} <- evaluate(socket, "document.title"),
-           {:ok, body_text} <- page_text(socket) do
-        {:ok,
-         %{
-           browser: :chrome,
-           cookies: normalize_cookies(cookies["cookies"]),
-           current_url: current_url,
-           title: title,
-           body_text: body_text,
-           headless: Keyword.get(opts, :headless, true)
-         }}
-      end
-    after
-      cleanup_session(session)
+    with :ok <- wait_for_devtools(session.port, opts),
+         {:ok, target} <- create_target(session.port, url),
+         {:ok, socket} <- CDPConnection.start_link(target["webSocketDebuggerUrl"], self()),
+         {:ok, _page_enabled} <- cdp_command(socket, "Page.enable"),
+         {:ok, _network_enabled} <- cdp_command(socket, "Network.enable"),
+         :ok <- wait_for_solver_window(opts),
+         {:ok, cookies} <- cdp_command(socket, "Network.getAllCookies"),
+         {:ok, current_url} <- evaluate(socket, "window.location.href"),
+         {:ok, title} <- evaluate(socket, "document.title"),
+         {:ok, body_text} <- page_text(socket) do
+      {:ok,
+       %{
+         browser: :chrome,
+         cookies: normalize_cookies(cookies["cookies"]),
+         current_url: current_url,
+         title: title,
+         body_text: body_text,
+         headless: Keyword.get(opts, :headless, true)
+       }}
     end
+  after
+    cleanup_session(session)
   end
 
   defp launch_session(browser_path, port, _url, opts) do

@@ -42,6 +42,7 @@ defmodule ExUndercover.WireGuard.Config do
           allow_userspace: boolean()
         }
 
+  @doc false
   @spec new(keyword()) :: t()
   def new(opts) do
     addresses =
@@ -63,6 +64,7 @@ defmodule ExUndercover.WireGuard.Config do
     }
   end
 
+  @doc false
   @spec from_private_key(binary(), keyword()) :: t()
   def from_private_key(private_key, opts \\ []) when is_binary(private_key) do
     new(
@@ -74,6 +76,7 @@ defmodule ExUndercover.WireGuard.Config do
     )
   end
 
+  @doc false
   @spec from_file(binary(), keyword()) :: {:ok, t()} | {:error, term()}
   def from_file(path, opts \\ []) when is_binary(path) do
     with {:ok, contents} <- File.read(path),
@@ -90,6 +93,7 @@ defmodule ExUndercover.WireGuard.Config do
     end
   end
 
+  @doc false
   @spec with_peer(t(), keyword()) :: t()
   def with_peer(%__MODULE__{} = config, opts) do
     peer = %{
@@ -104,15 +108,19 @@ defmodule ExUndercover.WireGuard.Config do
     %__MODULE__{config | peers: [peer]}
   end
 
+  @doc false
   @spec default_allowed_ips() :: [binary()]
   def default_allowed_ips, do: @default_allowed_ips
 
+  @doc false
   @spec default_dns() :: [binary()]
   def default_dns, do: @default_dns
 
+  @doc false
   @spec default_address() :: binary()
   def default_address, do: @default_address
 
+  @doc false
   @spec default_persistent_keepalive() :: pos_integer()
   def default_persistent_keepalive, do: @default_persistent_keepalive
 

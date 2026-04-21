@@ -5,6 +5,7 @@ defmodule ExUndercover.Transport.TrustStore do
 
   @bundle_name "custom_roots.pem"
 
+  @doc false
   @spec install!(binary()) :: binary()
   def install!(source_path) when is_binary(source_path) do
     target_path = installed_path()
@@ -13,11 +14,13 @@ defmodule ExUndercover.Transport.TrustStore do
     target_path
   end
 
+  @doc false
   @spec installed_path() :: binary()
   def installed_path do
     Application.app_dir(:ex_undercover, "priv/certs/#{@bundle_name}")
   end
 
+  @doc false
   @spec apply_default_bundle(map()) :: map()
   def apply_default_bundle(metadata) when is_map(metadata) do
     cond do

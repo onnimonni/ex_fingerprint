@@ -16,7 +16,7 @@ defmodule Mix.Tasks.ExUndercover.VerifySolverAlignment do
         ]
       )
 
-    profile_id = String.to_atom(opts[:profile] || "chrome_latest")
+    profile_id = String.to_existing_atom(opts[:profile] || "chrome_latest")
 
     with {:ok, profile} <- resolve_profile(profile_id),
          {:ok, browser} <-

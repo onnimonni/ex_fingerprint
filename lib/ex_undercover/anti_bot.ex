@@ -13,6 +13,7 @@ defmodule ExUndercover.AntiBot do
           | :server_error
           | :unknown
 
+  @doc false
   @spec classify(Response.t()) :: {classification(), map()}
   def classify(%Response{status: status, headers: headers, body: body}) do
     headers = normalize_headers(headers)

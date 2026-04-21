@@ -5,6 +5,7 @@ defmodule ExUndercover.Solver.Chrome.CDPConnection do
     WebSockex.start(url, __MODULE__, %{owner: owner})
   end
 
+  @doc false
   def send_command(pid, payload) do
     WebSockex.send_frame(pid, {:text, Jason.encode!(payload)})
   end

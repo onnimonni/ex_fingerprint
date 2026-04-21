@@ -16,6 +16,7 @@ defmodule ExUndercover.BrowserProfile do
           transport: %{optional(atom()) => map()}
         }
 
+  @doc false
   @spec from_map(map()) :: t()
   def from_map(%{} = map) do
     %__MODULE__{
@@ -28,6 +29,7 @@ defmodule ExUndercover.BrowserProfile do
     }
   end
 
+  @doc false
   @spec to_map(t()) :: map()
   def to_map(%__MODULE__{} = profile) do
     %{
@@ -41,7 +43,7 @@ defmodule ExUndercover.BrowserProfile do
   end
 
   defp fetch!(map, key) when is_binary(key) do
-    Map.get(map, key) || Map.fetch!(map, String.to_atom(key))
+    Map.get(map, key) || Map.fetch!(map, String.to_existing_atom(key))
   end
 
   defp normalize_headers(headers) do
@@ -61,5 +63,5 @@ defmodule ExUndercover.BrowserProfile do
   defp stringify_keys(value), do: value
 
   defp to_atom(value) when is_atom(value), do: value
-  defp to_atom(value) when is_binary(value), do: String.to_atom(value)
+  defp to_atom(value) when is_binary(value), do: String.to_existing_atom(value)
 end

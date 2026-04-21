@@ -18,6 +18,7 @@ defmodule ExUndercover.Request do
           metadata: map()
         }
 
+  @doc false
   @spec new(String.t(), keyword()) :: t()
   def new(url, opts \\ []) when is_binary(url) do
     %__MODULE__{
