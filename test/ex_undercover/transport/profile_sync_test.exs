@@ -1,6 +1,8 @@
 defmodule ExUndercover.Transport.ProfileSyncTest do
   use ExUnit.Case, async: true
 
+  @moduletag :nif_required
+
   alias ExUndercover.Transport.ProfileSync
 
   test "resolves latest alias from the file store before falling back to native metadata" do

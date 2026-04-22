@@ -1,6 +1,8 @@
 defmodule ExUndercover.DebugTest do
   use ExUnit.Case, async: true
 
+  @moduletag :nif_required
+
   alias ExUndercover.Debug
   alias ExUndercover.Request
 

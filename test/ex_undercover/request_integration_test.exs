@@ -1,6 +1,8 @@
 defmodule ExUndercover.RequestIntegrationTest do
   use ExUnit.Case, async: false
 
+  @moduletag :nif_required
+
   alias ExUndercover.Request
   alias ExUndercover.Rotator
   alias ExUndercover.Solver.Registry

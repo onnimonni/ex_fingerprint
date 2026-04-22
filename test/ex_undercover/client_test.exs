@@ -1,6 +1,8 @@
 defmodule ExUndercover.ClientTest do
   use ExUnit.Case, async: false
 
+  @moduletag :nif_required
+
   alias ExUndercover.Client
   alias ExUndercover.Request
   alias ExUndercover.TestSupport.HTTPServer
