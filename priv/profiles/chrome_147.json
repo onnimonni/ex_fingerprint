@@ -123,6 +123,7 @@
         "P-256"
       ],
       "extension_order": [
+        "grease",
         "server_name",
         "extended_master_secret",
         "renegotiate",
@@ -141,19 +142,20 @@
         "record_size_limit",
         "cert_compression",
         "encrypted_client_hello",
-        "padding"
+        "padding",
+        "grease"
       ],
       "min_version": "tls1.2",
       "max_version": "tls1.3",
       "record_size_limit": 16385,
       "ech_grease": true,
       "extension_permutation": false,
-      "grease_enabled": null,
+      "grease_enabled": true,
       "pre_shared_key": true,
       "preserve_tls13_cipher_list": true,
       "ocsp_stapling": true,
       "signed_cert_timestamps": true,
-      "notes": "Chrome 147 profile with ALPS (ApplicationSettingsExtensionNew h2), fixed extension order. enable_connect_protocol uses ID 8 (RFC 8441) vs Chrome's ID 7 — minor bogdanfinn gap."
+      "notes": "Chrome 147 profile with ALPS (h2 via new codepoint), GREASE bookending (first+last), fixed extension order."
     },
     "http2": {
       "pseudo_header_order": [

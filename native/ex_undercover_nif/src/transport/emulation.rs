@@ -285,6 +285,10 @@ fn extension(value: &str) -> Result<ExtensionType, RequestError> {
         "cert_compression" => Ok(ExtensionType::CERT_COMPRESSION),
         "encrypted_client_hello" => Ok(ExtensionType::ENCRYPTED_CLIENT_HELLO),
         "padding" => Ok(ExtensionType::PADDING),
+        // GREASE placeholder: BoringSSL replaces this with the actual random GREASE value
+        // selected for the connection when grease_enabled is true. Using 0x0A0A (the first
+        // value in the GREASE alphabet) as a well-known placeholder — same approach as Chrome.
+        "grease" => Ok(ExtensionType::from(0x0A0Au16)),
         other => Err(RequestError::Protocol(format!(
             "unsupported extension type: {other}"
         ))),

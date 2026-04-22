@@ -91,7 +91,11 @@ pub fn chrome_147() -> BrowserProfile {
                 "X25519".to_string(),
                 "P-256".to_string(),
             ],
+            // Chrome always bookends its extension list with GREASE at first+last position.
+            // The 0x0A0A placeholder is replaced by BoringSSL with the actual random
+            // GREASE value selected for each connection (requires grease_enabled: true).
             extension_order: vec![
+                "grease".to_string(),
                 "server_name".to_string(),
                 "extended_master_secret".to_string(),
                 "renegotiate".to_string(),
@@ -111,13 +115,14 @@ pub fn chrome_147() -> BrowserProfile {
                 "cert_compression".to_string(),
                 "encrypted_client_hello".to_string(),
                 "padding".to_string(),
+                "grease".to_string(),
             ],
             min_version: "tls1.2".to_string(),
             max_version: "tls1.3".to_string(),
             record_size_limit: Some(0x4001),
             ech_grease: true,
             extension_permutation: false,
-            grease_enabled: None,
+            grease_enabled: Some(true),
             pre_shared_key: true,
             preserve_tls13_cipher_list: true,
             ocsp_stapling: true,
