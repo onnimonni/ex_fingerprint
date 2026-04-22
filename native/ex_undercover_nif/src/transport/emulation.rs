@@ -281,6 +281,7 @@ fn extension(value: &str) -> Result<ExtensionType, RequestError> {
         "signature_algorithms" => Ok(ExtensionType::SIGNATURE_ALGORITHMS),
         "psk_key_exchange_modes" => Ok(ExtensionType::PSK_KEY_EXCHANGE_MODES),
         "record_size_limit" => Ok(ExtensionType::RECORD_SIZE_LIMIT),
+        "application_settings" => Ok(ExtensionType::APPLICATION_SETTINGS),
         "cert_compression" => Ok(ExtensionType::CERT_COMPRESSION),
         "encrypted_client_hello" => Ok(ExtensionType::ENCRYPTED_CLIENT_HELLO),
         "padding" => Ok(ExtensionType::PADDING),

@@ -63,8 +63,10 @@
         "h2",
         "http/1.1"
       ],
-      "alps": [],
-      "alps_use_new_codepoint": false,
+      "alps": [
+        "h2"
+      ],
+      "alps_use_new_codepoint": true,
       "certificate_compression": [
         "brotli"
       ],
@@ -128,6 +130,7 @@
         "ec_point_formats",
         "session_ticket",
         "application_layer_protocol_negotiation",
+        "application_settings",
         "status_request",
         "delegated_credential",
         "certificate_timestamp",
@@ -144,20 +147,20 @@
       "max_version": "tls1.3",
       "record_size_limit": 16385,
       "ech_grease": true,
-      "extension_permutation": true,
+      "extension_permutation": false,
       "grease_enabled": null,
       "pre_shared_key": true,
       "preserve_tls13_cipher_list": true,
       "ocsp_stapling": true,
       "signed_cert_timestamps": true,
-      "notes": "Chrome 147 template backed by BoringSSL-style TLS options. Replace values from fresh capture when Chrome 148 ships."
+      "notes": "Chrome 147 profile with ALPS (ApplicationSettingsExtensionNew h2), fixed extension order. enable_connect_protocol uses ID 8 (RFC 8441) vs Chrome's ID 7 — minor bogdanfinn gap."
     },
     "http2": {
       "pseudo_header_order": [
         ":method",
-        ":path",
         ":authority",
-        ":scheme"
+        ":scheme",
+        ":path"
       ],
       "settings_order": [
         "header_table_size",
@@ -179,21 +182,33 @@
           0
         ],
         [
+          "max_concurrent_streams",
+          1000
+        ],
+        [
           "initial_window_size",
-          131072
+          6291456
         ],
         [
           "max_frame_size",
           16384
+        ],
+        [
+          "max_header_list_size",
+          262144
+        ],
+        [
+          "enable_connect_protocol",
+          1
+        ],
+        [
+          "no_rfc7540_priorities",
+          1
         ]
       ],
       "initial_stream_id": 3,
-      "initial_connection_window_size": 12582912,
-      "stream_dependency": {
-        "stream_id": 0,
-        "weight": 41,
-        "exclusive": false
-      },
+      "initial_connection_window_size": 15728640,
+      "stream_dependency": null,
       "priority_header": "u=0, i"
     }
   }

@@ -36,8 +36,8 @@ pub fn chrome_147() -> BrowserProfile {
         ],
         tls: TlsProfile {
             alpn: vec!["h2".to_string(), "http/1.1".to_string()],
-            alps: vec![],
-            alps_use_new_codepoint: false,
+            alps: vec!["h2".to_string()],
+            alps_use_new_codepoint: true,
             certificate_compression: vec!["brotli".to_string()],
             curves: vec![
                 "X25519MLKEM768".to_string(),
@@ -99,6 +99,7 @@ pub fn chrome_147() -> BrowserProfile {
                 "ec_point_formats".to_string(),
                 "session_ticket".to_string(),
                 "application_layer_protocol_negotiation".to_string(),
+                "application_settings".to_string(),
                 "status_request".to_string(),
                 "delegated_credential".to_string(),
                 "certificate_timestamp".to_string(),
@@ -115,7 +116,7 @@ pub fn chrome_147() -> BrowserProfile {
             max_version: "tls1.3".to_string(),
             record_size_limit: Some(0x4001),
             ech_grease: true,
-            extension_permutation: true,
+            extension_permutation: false,
             grease_enabled: None,
             pre_shared_key: true,
             preserve_tls13_cipher_list: true,
