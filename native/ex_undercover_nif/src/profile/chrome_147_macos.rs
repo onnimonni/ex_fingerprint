@@ -1,11 +1,11 @@
 use super::{BrowserProfile, Http2Profile, Http2StreamDependency, TlsProfile};
 
-pub fn chrome_147() -> BrowserProfile {
+pub fn chrome_147_macos() -> BrowserProfile {
     BrowserProfile {
-        id: "chrome_147".to_string(),
+        id: "chrome_147_macos".to_string(),
         browser: "chrome".to_string(),
         version: "147.0.7727.101/102".to_string(),
-        platform: "linux".to_string(),
+        platform: "macos".to_string(),
         headers: vec![
             (
                 "sec-ch-ua".to_string(),
@@ -13,11 +13,11 @@ pub fn chrome_147() -> BrowserProfile {
                     .to_string(),
             ),
             ("sec-ch-ua-mobile".to_string(), "?0".to_string()),
-            ("sec-ch-ua-platform".to_string(), "\"Linux\"".to_string()),
+            ("sec-ch-ua-platform".to_string(), "\"macOS\"".to_string()),
             ("upgrade-insecure-requests".to_string(), "1".to_string()),
             (
                 "user-agent".to_string(),
-                "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36".to_string(),
+                "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36".to_string(),
             ),
             ("accept-language".to_string(), "en-US,en;q=0.9".to_string()),
             (
@@ -105,7 +105,7 @@ pub fn chrome_147() -> BrowserProfile {
             preserve_tls13_cipher_list: true,
             ocsp_stapling: true,
             signed_cert_timestamps: true,
-            notes: "Chrome 147 Linux — TLS values from real Chrome 147 macOS capture at tls.peet.ws (BoringSSL identical across platforms). JA3 hash: 30441fc2e3fd084a40fe4a86ced67dd6. Akamai hash: 52d84b11737d980aef856699f885ca86.".to_string(),
+            notes: "Chrome 147 macOS — captured from real Chrome 147 on macOS at tls.peet.ws. JA3 hash: 30441fc2e3fd084a40fe4a86ced67dd6. Akamai hash: 52d84b11737d980aef856699f885ca86.".to_string(),
         },
         http2: Http2Profile {
             pseudo_header_order: vec![

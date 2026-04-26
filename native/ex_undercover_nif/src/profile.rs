@@ -1,9 +1,11 @@
 mod chrome_147;
+mod chrome_147_macos;
 
 use serde::{Deserialize, Serialize};
 use std::collections::BTreeMap;
 
 pub use chrome_147::chrome_147;
+pub use chrome_147_macos::chrome_147_macos;
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
 pub struct BrowserProfile {
@@ -70,6 +72,7 @@ impl Http2Profile {
 pub fn resolve(id: &str) -> Option<BrowserProfile> {
     match id {
         "chrome_147" => Some(chrome_147()),
+        "chrome_147_macos" => Some(chrome_147_macos()),
         _ => None,
     }
 }
@@ -83,10 +86,11 @@ pub struct ProfileMetadata {
 pub fn profile_metadata() -> ProfileMetadata {
     let mut latest_aliases = BTreeMap::new();
     latest_aliases.insert("chrome_latest", "chrome_147");
+    latest_aliases.insert("chrome_latest_macos", "chrome_147_macos");
 
     ProfileMetadata {
         latest_aliases,
-        profiles: vec![chrome_147()],
+        profiles: vec![chrome_147(), chrome_147_macos()],
     }
 }
 
@@ -97,6 +101,7 @@ mod tests {
     #[test]
     fn resolves_known_profile_ids() {
         assert!(resolve("chrome_147").is_some());
+        assert!(resolve("chrome_147_macos").is_some());
         assert!(resolve("chrome_unknown").is_none());
     }
 
