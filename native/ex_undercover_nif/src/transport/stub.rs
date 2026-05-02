@@ -74,15 +74,21 @@ async fn dispatch_async(
             )
         })
         .collect::<Vec<_>>();
-    let body = response
-        .text()
+    // Use raw bytes, NOT text(). text() runs `String::from_utf8_lossy` which
+    // replaces every byte that is not valid UTF-8 with U+FFFD (3 bytes:
+    // EF BF BD). That silently shreds any non-text payload — most importantly
+    // gzipped sitemaps (Content-Type: application/x-gzip) which start with
+    // 0x1F 0x8B 0x08; the 0x8B trips the lossy decoder, the gzip stream
+    // becomes un-gunzippable, and sitemap discovery fails open with no logs.
+    let body_bytes = response
+        .bytes()
         .await
         .map_err(|err| RequestError::Protocol(err.to_string()))?;
 
     Ok(ResponsePayload {
         status,
         headers,
-        body,
+        body: serde_bytes::ByteBuf::from(body_bytes.to_vec()),
         remote_address,
         diagnostics: diagnostics(plan, payload, profile, version),
     })
